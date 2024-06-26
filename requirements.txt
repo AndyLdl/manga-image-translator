@@ -32,7 +32,7 @@ openai
 open_clip_torch
 safetensors
 pandas
-onnxruntime==1.17.3
+onnxruntime
 timm
 omegaconf
 python-dotenv

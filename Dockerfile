@@ -17,6 +17,8 @@ RUN pip install torchvision --force-reinstall
 RUN apt-get remove -y g++ && \
     apt-get autoremove -y
 
+RUN python -c "import onnxruntime"
+
 # Copy app
 COPY . /app
 
