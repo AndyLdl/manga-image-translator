@@ -22,7 +22,7 @@ transformers
 py3langid
 sentencepiece
 editdistance
-numpy<2
+numpy<2.0.0
 tensorboardX
 websockets
 protobuf
@@ -32,7 +32,7 @@ openai
 open_clip_torch
 safetensors
 pandas
-onnxruntime
+onnxruntime==v1.17.3
 timm
 omegaconf
 python-dotenv
