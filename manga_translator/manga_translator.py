@@ -665,7 +665,7 @@ class MangaTranslatorWeb(MangaTranslator):
         self.host = params.get('host', '127.0.0.1')
         if self.host == '0.0.0.0':
             self.host = '127.0.0.1'
-        self.port = params.get('port', 5003)
+        self.port = params.get('port', 8080)
         self.nonce = params.get('nonce', '')
         self.ignore_errors = params.get('ignore_errors', True)
         self._task_id = None
@@ -1058,7 +1058,7 @@ class MangaTranslatorAPI(MangaTranslator):
         nest_asyncio.apply()
         super().__init__(params)
         self.host = params.get('host', '127.0.0.1')
-        self.port = params.get('port', '5003')
+        self.port = params.get('port', '8080')
         self.log_web = params.get('log_web', False)
         self.ignore_errors = params.get('ignore_errors', True)
         self._task_id = None
