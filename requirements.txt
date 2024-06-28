@@ -5,7 +5,6 @@ torchvision
 torch-summary
 einops
 scikit-image
-opencv-python
 pyclipper
 shapely
 requests
