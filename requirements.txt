@@ -1,3 +1,4 @@
+opencv-python-headless
 networkx
 torch
 torchvision
@@ -22,7 +23,7 @@ transformers
 py3langid
 sentencepiece
 editdistance
-numpy==1.26.0
+numpy
 tensorboardX
 websockets
 protobuf
@@ -32,7 +33,7 @@ openai
 open_clip_torch
 safetensors
 pandas
-onnxruntime==1.17.1
+onnxruntime
 timm
 omegaconf
 python-dotenv
