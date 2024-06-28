@@ -745,9 +745,11 @@ class MangaTranslatorWeb(MangaTranslator):
                 # Write log file
                 log_file = self._result_path('log.txt')
                 add_file_logger(log_file)
+            # 获取文件扩展名
+            file_ext = self._params.get('format', 'jpg')
 
-            # final.png will be renamed if format param is set
-            await self.translate_path(self._result_path('input.png'), self._result_path('final.png'),
+            # 使用动态文件扩展名
+            await self.translate_path(self._result_path(f'input.{file_ext}'), self._result_path(f'final.{file_ext}'),
                                       params=self._params)
             print()
 
