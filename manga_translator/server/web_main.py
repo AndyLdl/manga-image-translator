@@ -147,29 +147,34 @@ async def queue_size_async(request):
 async def handle_post(request):
     print("handle_post")
     data = await request.post()
-    print("handle_post url", data)
+    print("handle_post111 url", data)
     detection_size = None
     selected_translator = 'youdao'
     target_language = 'CHS'
     detector = 'default'
     direction = 'auto'
+    print("handle_post2222 url", ('tgt_lang' in data))
     if 'tgt_lang' in data:
         target_language = data['tgt_lang'].upper()
         # TODO: move dicts to their own files to reduce load time
         if target_language not in VALID_LANGUAGES:
             target_language = 'CHS'
+    print("handle_post33333 url", ('detector' in data))        
     if 'detector' in data:
         detector = data['detector'].lower()
         if detector not in VALID_DETECTORS:
             detector = 'default'
+    print("handle_post444444 url", ('direction' in data))    
     if 'direction' in data:
         direction = data['direction'].lower()
         if direction not in VALID_DIRECTIONS:
             direction = 'auto'
+    print("handle_post555555 url", ('translator' in data))    
     if 'translator' in data:
         selected_translator = data['translator'].lower()
         if selected_translator not in AVAILABLE_TRANSLATORS:
             selected_translator = AVAILABLE_TRANSLATORS[0]
+    print("handle_post6666666 url", ('size' in data)) 
     if 'size' in data:
         size_text = data['size'].upper()
         if size_text == 'S':
@@ -180,6 +185,8 @@ async def handle_post(request):
             detection_size = 2048
         elif size_text == 'X':
             detection_size = 2560
+    print("handle_post111111111 url", ('file' in data))
+    print("handle_post111111111 url", ('url' in data))
     if 'file' in data:
         file_field = data['file']
         content = file_field.file.read()
