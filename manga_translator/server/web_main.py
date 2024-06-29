@@ -13,6 +13,7 @@ from PIL import Image
 from aiohttp import web
 from collections import deque
 from imagehash import phash
+import certifi
 
 SERVER_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 BASE_PATH = os.path.dirname(os.path.dirname(SERVER_DIR_PATH))
@@ -144,7 +145,9 @@ async def queue_size_async(request):
     return web.json_response({'size' : len(QUEUE)})
 
 async def handle_post(request):
+    print("handle_post")
     data = await request.post()
+    print("handle_post url", data)
     detection_size = None
     selected_translator = 'youdao'
     target_language = 'CHS'
@@ -181,23 +184,42 @@ async def handle_post(request):
         file_field = data['file']
         content = file_field.file.read()
     elif 'url' in data:
+        print("handle_post url", data['url'])
         from aiohttp import ClientSession
-        async with ClientSession() as session:
-            async with session.get(data['url']) as resp:
-                if resp.status == 200:
-                    content = await resp.read()
-                else:
-                    return web.json_response({'status': 'error'})
+        from aiohttp import ClientError
+        from aiohttp import TCPConnector
+        import ssl
+        try:
+            # 创建 SSLContext 对象
+            ssl_context = ssl.create_default_context(cafile=certifi.where())
+
+            async with ClientSession(connector=TCPConnector(ssl=ssl_context)) as session:
+                print("url session: ", session.get(data['url']))
+                async with session.get(data['url']) as resp:
+                    print("Received response with status:", resp.status)  # 打印状态码
+                    if resp.status == 200:
+                        content = await resp.read()
+                    else:
+                        print("url error")
+                        return web.json_response({'status': 'error'})
+        except ClientError as e:
+            print(f"Client error: {e}")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
     else:
+        print("handle_post error")
         return web.json_response({'status': 'error'})
     try:
         img = Image.open(io.BytesIO(content))
         img.verify()
         img = Image.open(io.BytesIO(content))
         if img.width * img.height > MAX_IMAGE_SIZE_PX:
+            print("error-too-large")
             return web.json_response({'status': 'error-too-large'})
-    except Exception:
+    except Exception as e:
+        print("error-img-corrupt: ", e)
         return web.json_response({'status': 'error-img-corrupt'})
+    print("handle_post success")
     return img, detection_size, selected_translator, target_language, detector, direction
 
 @routes.post("/run")
@@ -417,8 +439,10 @@ async def submit_async(request):
     global FORMAT
     x = await handle_post(request)
     if isinstance(x, tuple):
+        print("handle_post success")
         img, size, selected_translator, target_language, detector, direction = x
     else:
+        print("handle_post failed")
         return x
     task_id = f'{phash(img, hash_size = 16)}-{size}-{selected_translator}-{target_language}-{detector}-{direction}'
     now = time.time()

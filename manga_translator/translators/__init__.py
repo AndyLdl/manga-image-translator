@@ -36,12 +36,12 @@ TRANSLATORS = {
     'deepl': DeeplTranslator,
     'papago': PapagoTranslator,
     'caiyun': CaiyunTranslator,
-    'gpt3': GPT3Translator,
-    'gpt3.5': GPT35TurboTranslator,
-    'gpt4': GPT4Translator,
-    'none': NoneTranslator,
-    'original': OriginalTranslator,
-    'sakura': SakuraTranslator,
+    # 'gpt3': GPT3Translator,
+    # 'gpt3.5': GPT35TurboTranslator,
+    # 'gpt4': GPT4Translator,
+    # 'none': NoneTranslator,
+    # 'original': OriginalTranslator,
+    # 'sakura': SakuraTranslator,
     **OFFLINE_TRANSLATORS,
 }
 translator_cache = {}
