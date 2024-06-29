@@ -412,6 +412,7 @@ async def post_task_update_async(request):
 
 @routes.post("/submit")
 async def submit_async(request):
+    print("submitting task")
     """Adds new task to the queue. Called by web client in ui.html when submitting an image."""
     global FORMAT
     x = await handle_post(request)
