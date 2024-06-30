@@ -171,9 +171,13 @@ async def handle_post(request):
             direction = 'auto'
     print("handle_post555555 url", ('translator' in data))    
     if 'translator' in data:
-        selected_translator = data['translator'].lower()
-        if selected_translator not in AVAILABLE_TRANSLATORS:
-            selected_translator = AVAILABLE_TRANSLATORS[0]
+        try:
+            selected_translator = data['translator'].lower()
+            print("selected_translator", selected_translator)    
+            if selected_translator not in AVAILABLE_TRANSLATORS:
+                selected_translator = AVAILABLE_TRANSLATORS[0]
+        except Exception as e:
+            print(f"55555555555Unexpected error: {e}")    
     print("handle_post6666666 url", ('size' in data)) 
     if 'size' in data:
         size_text = data['size'].upper()
