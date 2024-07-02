@@ -14,6 +14,10 @@ from aiohttp import web
 from collections import deque
 from imagehash import phash
 import certifi
+from google.cloud import storage
+# 设置Google Cloud Storage
+storage_client = storage.Client()
+bucket = storage_client.get_bucket('manga-translate-result')
 
 SERVER_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 BASE_PATH = os.path.dirname(os.path.dirname(SERVER_DIR_PATH))
@@ -243,10 +247,12 @@ async def run_async(request):
         return x
     task_id = f'{phash(img, hash_size = 16)}-{size}-{selected_translator}-{target_language}-{detector}-{direction}'
     print(f'New `run` task {task_id}')
+    gcs_object_name = f'result/{task_id}/final.{FORMAT}'
+    gcs_path = f'https://storage.googleapis.com/manga-translate-result/{gcs_object_name}'
     if os.path.exists(f'result/{task_id}/final.{FORMAT}'):
         # Add a console output prompt to avoid the console from appearing to be stuck without execution when the translated image is hit consecutively.
         print(f'Using cached result for {task_id}')
-        return web.json_response({'task_id' : task_id, 'status': 'successful'})
+        return web.json_response({'task_id': task_id, 'status': 'successful', 'url': gcs_path})
     # elif os.path.exists(f'result/{task_id}'):
     #     # either image is being processed or error occurred
     #     if task_id not in TASK_STATES:
@@ -276,8 +282,9 @@ async def run_async(request):
             break
         state = TASK_STATES[task_id]
         if state['finished']:
+            print(f'Image available at GCS {gcs_path}')
             break
-    return web.json_response({'task_id': task_id, 'status': 'successful' if state['finished'] else state['info']})
+    return web.json_response({'task_id': task_id, 'status': 'successful' if state['finished'] else state['info'], 'url': gcs_path})
 
 
 @routes.post("/connect-internal")
