@@ -46,4 +46,5 @@ pyhyphen
 langcodes
 langdetect
 manga-ocr
+google-cloud-storage
 pydensecrf@https://github.com/lucasb-eyer/pydensecrf/archive/refs/heads/master.zip
